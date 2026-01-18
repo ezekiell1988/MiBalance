@@ -9,6 +9,34 @@ public class MiBalanceDbContext : DbContext
     {
     }
 
+    public override int SaveChanges()
+    {
+        SetTimestamps();
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        SetTimestamps();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void SetTimestamps()
+    {
+        var entries = ChangeTracker.Entries<BaseEntity>();
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+    }
+
     // DbSets
     public DbSet<CuentaContable> CuentasContables { get; set; }
     public DbSet<AsientoContable> AsientosContables { get; set; }

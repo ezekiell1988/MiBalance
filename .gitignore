@@ -24,6 +24,19 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Build output with backslashes (Windows paths)
+**/bin\**
+**/obj\**
+**/bin\\**
+**/obj\\**
+src/*/bin\Debug/
+src/*/bin\\Debug/
+src/*/obj\Debug/
+src/*/obj\\Debug/
+
+# Migrations (opcional - descomentar si no quieres trackear migraciones)
+# **/Migrations/
+
 # Visual Studio cache/options directory
 .vs/
 
