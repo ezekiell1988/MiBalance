@@ -1,121 +1,56 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-/**
- * Interfaz para items del menú
- */
 export interface MenuItem {
+  text?: string;
   icon?: string;
-  iconMobile?: string;
-  title: string;
-  url: string;
-  caret?: string;
-  submenu?: MenuItem[];
+  path?: string;
+  badge?: string;
+  badgeClass?: string;
+  children?: MenuItem[];
+  target?: string;
+  caret?: boolean;
+  highlight?: boolean;
+  img?: string;
+  label?: string;
+  title?: boolean;
 }
 
 /**
- * Servicio para gestionar el menú de la aplicación
- * Siguiendo buenas prácticas de Angular 20+
+ * Servicio simplificado para gestionar el menú de la aplicación
  */
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class AppMenuService {
-  /**
-   * Configuración del menú centralizada
-   * Facilita mantenimiento y testing
-   */
-  private readonly menuConfig: MenuItem[] = [
+  private appMenus: MenuItem[] = [
     {
-      icon: "fa fa-home",
-      iconMobile: "home-outline",
-      title: "Dashboard",
-      url: "/dashboard",
+      icon: 'fa fa-th',
+      text: 'Dashboard',
+      path: '/dashboard'
     },
     {
-      icon: "fa fa-exchange-alt",
-      iconMobile: "swap-horizontal-outline",
-      title: "Transacciones",
-      url: "/transacciones",
+      icon: 'fa fa-credit-card',
+      text: 'Tarjetas',
+      path: '/tarjetas'
     },
     {
-      icon: "fa fa-credit-card",
-      iconMobile: "card-outline",
-      title: "Tarjetas",
-      url: "/tarjetas",
+      icon: 'fa fa-exchange-alt',
+      text: 'Transacciones',
+      path: '/transacciones'
     },
     {
-      icon: "fa fa-tags",
-      iconMobile: "pricetags-outline",
-      title: "Categorías",
-      url: "/categorias",
+      icon: 'fa fa-tags',
+      text: 'Categorías',
+      path: '/categorias'
     },
     {
-      icon: "fa fa-chart-bar",
-      iconMobile: "bar-chart-outline",
-      title: "Reportes",
-      url: "/reportes",
-      caret: "true",
-      submenu: [
-        {
-          url: "/reportes",
-          title: "Estado de Resultados",
-          icon: "fa fa-chart-line",
-          iconMobile: "trending-up-outline",
-        },
-        {
-          url: "/reportes",
-          title: "Flujo de Caja",
-          icon: "fa fa-dollar-sign",
-          iconMobile: "cash-outline",
-        },
-        {
-          url: "/reportes",
-          title: "Balance General",
-          icon: "fa fa-balance-scale",
-          iconMobile: "scale-outline",
-        },
-      ],
-    },
+      icon: 'fa fa-chart-line',
+      text: 'Reportes',
+      path: '/reportes'
+    }
   ];
 
-  /**
-   * Retorna una copia profunda del menú para evitar mutaciones
-   */
   getAppMenus(): MenuItem[] {
-    // Retorna deep copy para prevenir mutaciones accidentales
-    return JSON.parse(JSON.stringify(this.menuConfig));
-  }
-
-  /**
-   * Busca un item del menú por URL
-   */
-  findMenuItemByUrl(url: string): MenuItem | null {
-    const search = (items: MenuItem[]): MenuItem | null => {
-      for (const item of items) {
-        if (item.url === url) return item;
-        if (item.submenu) {
-          const found = search(item.submenu);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-    return search(this.menuConfig);
-  }
-
-  /**
-   * Obtiene todos los items del menú de forma plana
-   */
-  getFlatMenuItems(): MenuItem[] {
-    const flatten = (items: MenuItem[]): MenuItem[] => {
-      return items.reduce((acc, item) => {
-        acc.push(item);
-        if (item.submenu) {
-          acc.push(...flatten(item.submenu));
-        }
-        return acc;
-      }, [] as MenuItem[]);
-    };
-    return flatten(this.menuConfig);
+    return this.appMenus;
   }
 }

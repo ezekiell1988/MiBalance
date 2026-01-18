@@ -1,8 +1,10 @@
-export { HeaderComponent } from './header';
-export { FooterComponent } from './footer';
-export { SidebarComponent } from './sidebar';
-export { SidebarRightComponent } from './sidebar-right';
-export { TopMenuComponent } from './top-menu';
-export { PanelComponent } from './panel';
-export { FloatSubMenuComponent } from './float-sub-menu';
-export { ThemePanelComponent } from './theme-panel';
+// Re-export de componentes standalone
+// Usar rutas directas al archivo .component.ts para evitar problemas con metadata de TypeScript
+export * from './header/header.component';
+export * from './footer/footer.component';
+export * from './sidebar/sidebar.component';
+export * from './sidebar-right/sidebar-right.component';
+export * from './top-menu/top-menu.component';
+export * from './panel/panel.component';
+export * from './float-sub-menu/float-sub-menu.component';
+export * from './theme-panel/theme-panel.component';

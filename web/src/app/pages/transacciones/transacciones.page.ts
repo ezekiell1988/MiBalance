@@ -2,7 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PanelComponent } from '../../components/panel/panel.component';
-import { LoggerService } from '../../service';
+import { LoggerService, TransaccionesService } from '../../service';
+import { Transaccion, TipoTransaccion } from '../../shared/models';
 
 @Component({
   selector: 'app-transacciones',
@@ -13,11 +14,14 @@ import { LoggerService } from '../../service';
 })
 export class TransaccionesPage implements OnInit {
   private readonly logger = inject(LoggerService).getLogger('TransaccionesPage');
+  private readonly transaccionesService = inject(TransaccionesService);
 
-  transacciones: any[] = [];
-  filtroCategoria: string = '';
-  filtroTipo: string = '';
+  transacciones: Transaccion[] = [];
+  filtroCategoria: number | null = null;
+  filtroTipo: TipoTransaccion | null = null;
   busqueda: string = '';
+  cargando = false;
+  error: string | null = null;
 
   ngOnInit() {
     this.logger.info('Página de transacciones inicializada');
@@ -25,72 +29,40 @@ export class TransaccionesPage implements OnInit {
   }
 
   cargarTransacciones() {
-    this.logger.debug('Cargando transacciones');
+    this.logger.debug('Cargando transacciones desde API');
+    this.cargando = true;
+    this.error = null;
     
-    // TODO: Conectar con el servicio real del backend
-    // Datos de ejemplo
-    this.transacciones = [
-      {
-        id: 1,
-        fecha: new Date('2026-01-15'),
-        descripcion: 'Supermercado La Colonia',
-        categoria: 'Alimentación',
-        monto: -15000,
-        tipo: 'Gasto',
-        tarjeta: 'Visa ****1234'
+    const filtros = {
+      categoriaId: this.filtroCategoria || undefined,
+      tipo: this.filtroTipo || undefined
+    };
+    
+    this.transaccionesService.getTransacciones(filtros).subscribe({
+      next: (transacciones) => {
+        this.transacciones = transacciones;
+        this.cargando = false;
+        this.logger.success(`${transacciones.length} transacciones cargadas`);
       },
-      {
-        id: 2,
-        fecha: new Date('2026-01-14'),
-        descripcion: 'Salario Enero',
-        categoria: 'Ingresos',
-        monto: 500000,
-        tipo: 'Ingreso',
-        tarjeta: null
-      },
-      {
-        id: 3,
-        fecha: new Date('2026-01-13'),
-        descripcion: 'Gasolina Servicio Nacional',
-        categoria: 'Transporte',
-        monto: -8000,
-        tipo: 'Gasto',
-        tarjeta: 'Mastercard ****5678'
-      },
-      {
-        id: 4,
-        fecha: new Date('2026-01-12'),
-        descripcion: 'Netflix Subscripción',
-        categoria: 'Entretenimiento',
-        monto: -5000,
-        tipo: 'Gasto',
-        tarjeta: 'Visa ****1234'
-      },
-      {
-        id: 5,
-        fecha: new Date('2026-01-10'),
-        descripcion: 'Recibo de Agua',
-        categoria: 'Servicios',
-        monto: -7500,
-        tipo: 'Gasto',
-        tarjeta: null
+      error: (err) => {
+        this.error = 'Error al cargar las transacciones';
+        this.cargando = false;
+        this.logger.error('Error al cargar transacciones', err);
       }
-    ];
+    });
   }
 
   get transaccionesFiltradas() {
     return this.transacciones.filter(t => {
-      const matchCategoria = !this.filtroCategoria || t.categoria === this.filtroCategoria;
-      const matchTipo = !this.filtroTipo || t.tipo === this.filtroTipo;
       const matchBusqueda = !this.busqueda || 
         t.descripcion.toLowerCase().includes(this.busqueda.toLowerCase());
       
-      return matchCategoria && matchTipo && matchBusqueda;
+      return matchBusqueda;
     });
   }
 
-  get categorias(): string[] {
-    return [...new Set(this.transacciones.map(t => t.categoria))];
+  get categorias(): Set<number> {
+    return new Set(this.transacciones.map(t => t.categoriaId));
   }
 
   agregarTransaccion() {
@@ -105,25 +77,40 @@ export class TransaccionesPage implements OnInit {
 
   eliminarTransaccion(id: number) {
     this.logger.debug('Eliminar transacción:', id);
-    // TODO: Implementar eliminación con confirmación
+    if (confirm('¿Está seguro de eliminar esta transacción?')) {
+      this.transaccionesService.deleteTransaccion(id).subscribe({
+        next: () => {
+          this.logger.success('Transacción eliminada');
+          this.cargarTransacciones();
+        },
+        error: (err) => {
+          this.logger.error('Error al eliminar transacción', err);
+        }
+      });
+    }
   }
 
   limpiarFiltros() {
-    this.filtroCategoria = '';
-    this.filtroTipo = '';
+    this.filtroCategoria = null;
+    this.filtroTipo = null;
     this.busqueda = '';
+    this.cargarTransacciones();
+  }
+
+  aplicarFiltros() {
+    this.cargarTransacciones();
   }
 
   get totalIngresos(): number {
     return this.transaccionesFiltradas
-      .filter(t => t.monto > 0)
+      .filter(t => t.tipo === TipoTransaccion.Ingreso)
       .reduce((sum, t) => sum + t.monto, 0);
   }
 
   get totalGastos(): number {
     return this.transaccionesFiltradas
-      .filter(t => t.monto < 0)
-      .reduce((sum, t) => sum + Math.abs(t.monto), 0);
+      .filter(t => t.tipo === TipoTransaccion.Gasto)
+      .reduce((sum, t) => sum + t.monto, 0);
   }
 
   get balance(): number {

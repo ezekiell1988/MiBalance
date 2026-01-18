@@ -1,13 +1,14 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationStart } from '@angular/router';
-import { AppSettings } from '../../service/app-settings.service';
-import { AppVariablesService } from '../../service/app-variables.service';
-import { HeaderComponent } from '../../components/header/header.component';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
-import { SidebarRightComponent } from '../../components/sidebar-right/sidebar-right.component';
-import { TopMenuComponent } from '../../components/top-menu/top-menu.component';
-import { ThemePanelComponent } from '../../components/theme-panel/theme-panel.component';
+import { AppSettings, AppVariablesService } from '../../service';
+import { 
+  HeaderComponent,
+  SidebarComponent,
+  SidebarRightComponent,
+  TopMenuComponent,
+  ThemePanelComponent
+} from '../../components';
 
 @Component({
   selector: 'app-desktop-layout',

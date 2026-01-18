@@ -1,23 +1,39 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, EventEmitter } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
+/**
+ * Servicio para gestionar el estado del menú
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class MenuStateService {
-  private sidebarMenuOpen$ = new BehaviorSubject<boolean>(false);
+  private _menuExpanded = new BehaviorSubject<boolean>(false);
+  public menuExpanded$ = this._menuExpanded.asObservable();
+  
+  private _sidebarMenuState = new BehaviorSubject<boolean>(false);
 
-  constructor() {}
-
-  setSidebarMenuState(isOpen: boolean): void {
-    this.sidebarMenuOpen$.next(isOpen);
+  toggleMenu(): void {
+    this._menuExpanded.next(!this._menuExpanded.value);
   }
 
-  getSidebarMenuState(): Observable<boolean> {
-    return this.sidebarMenuOpen$.asObservable();
+  expandMenu(): void {
+    this._menuExpanded.next(true);
   }
 
-  isSidebarMenuOpen(): boolean {
-    return this.sidebarMenuOpen$.value;
+  collapseMenu(): void {
+    this._menuExpanded.next(false);
+  }
+
+  isMenuExpanded(): boolean {
+    return this._menuExpanded.value;
+  }
+
+  setSidebarMenuState(state: boolean): void {
+    this._sidebarMenuState.next(state);
+  }
+
+  getSidebarMenuState() {
+    return this._sidebarMenuState.asObservable();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
-import { AppMenuService } from "../../service/app-menus.service";
+import { AppMenuService } from "../../service";
 import { Router } from "@angular/router";
 import { ResponsiveComponent } from '../../shared/responsive-component.base';
 
