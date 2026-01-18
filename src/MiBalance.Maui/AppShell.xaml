@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MiBalance.Maui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MiBalance.Maui"
+    Shell.FlyoutBehavior="Flyout">
+
+    <ShellContent
+        Title="Inicio"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
+
+    <ShellContent
+        Title="Transacciones"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="Transacciones" />
+
+    <ShellContent
+        Title="Tarjetas"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="Tarjetas" />
+
+    <ShellContent
+        Title="Reportes"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="Reportes" />
+
+</Shell>

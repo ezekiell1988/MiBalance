@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MiBalance.Maui.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Label
+                Text="MiBalance"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Sistema de Control Financiero Personal"
+                SemanticProperties.Description="Bienvenido a MiBalance"
+                FontSize="18"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Ver Transacciones"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Escanear Factura"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Ver Tarjetas"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Button
+                Text="Reportes Financieros"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
