@@ -54,15 +54,18 @@ if (app.Environment.IsDevelopment())
 }
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
+// Swagger disponible siempre (comentar estas líneas en producción si es necesario)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiBalance API V1");
-        c.RoutePrefix = string.Empty; // Swagger en la raíz
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiBalance API V1");
+    c.RoutePrefix = "swagger"; // Swagger en /swagger
+    c.DocumentTitle = "MiBalance API - Documentación";
+});
+
+// Página de inicio
+app.MapGet("/", () => Results.Redirect("/swagger"))
+    .ExcludeFromDescription();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
