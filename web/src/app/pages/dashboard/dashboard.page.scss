@@ -1,0 +1,8 @@
+// Estilos específicos del dashboard
+.text-decoration-none {
+  text-decoration: none;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}

@@ -1,0 +1,16 @@
+export { AppSettings } from './app-settings.service';
+export { AppVariablesService } from './app-variables.service';
+export { AppMenuService } from './app-menus.service';
+export { PlatformDetectorService, PlatformMode } from './platform-detector.service';
+export { AuthService } from './auth.service';
+export { ClickeatService } from './clickeat.service';
+export { AudioRecorderService } from './audio-recorder.service';
+export { ShoppingWebSocketService } from './shopping-websocket.service';
+export { MenuStateService } from './menu-state.service';
+export { ConversationManagerService, type ConversationMessage } from './conversation-manager.service';
+export { AudioPlayerService } from './audio-player.service';
+export { AudioProcessorService } from './audio-processor.service';
+export { LoggerService, Logger, LogLevel, type LoggerConfig } from './logger.service';
+export { ConfigService, type AppConfig } from './config.service';
+export { ExamQuestionService } from './exam-question.service';
+export { MediaFileService } from './media-file.service';

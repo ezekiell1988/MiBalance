@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <!-- Resumen -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <div class="card border-success">
+        <div class="card-body text-center">
+          <div class="text-muted f-s-12">Total Ingresos</div>
+          <div class="f-s-20 f-w-600 text-success">
+            {{ totalIngresos | currency:'CRC':'symbol-narrow':'1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-danger">
+        <div class="card-body text-center">
+          <div class="text-muted f-s-12">Total Gastos</div>
+          <div class="f-s-20 f-w-600 text-danger">
+            {{ totalGastos | currency:'CRC':'symbol-narrow':'1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-primary">
+        <div class="card-body text-center">
+          <div class="text-muted f-s-12">Balance</div>
+          <div class="f-s-20 f-w-600" [ngClass]="balance >= 0 ? 'text-success' : 'text-danger'">
+            {{ balance | currency:'CRC':'symbol-narrow':'1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Principal -->
+  <panel [title]="'Gestión de Transacciones'">
+    <!-- Toolbar -->
+    <div class="d-flex justify-content-between align-items-center mb-3" slot="before-body">
+      <div class="d-flex gap-2">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Buscar..." 
+          [(ngModel)]="busqueda"
+          style="max-width: 250px;">
+        
+        <select class="form-select" [(ngModel)]="filtroCategoria" style="max-width: 200px;">
+          <option value="">Todas las categorías</option>
+          <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+        </select>
+
+        <select class="form-select" [(ngModel)]="filtroTipo" style="max-width: 150px;">
+          <option value="">Todos los tipos</option>
+          <option value="Ingreso">Ingresos</option>
+          <option value="Gasto">Gastos</option>
+        </select>
+
+        <button class="btn btn-secondary" (click)="limpiarFiltros()" *ngIf="busqueda || filtroCategoria || filtroTipo">
+          <i class="fa fa-times"></i> Limpiar
+        </button>
+      </div>
+
+      <button class="btn btn-primary" (click)="agregarTransaccion()">
+        <i class="fa fa-plus"></i> Nueva Transacción
+      </button>
+    </div>
+
+    <!-- Tabla de Transacciones -->
+    <div class="table-responsive">
+      <table class="table table-hover table-striped table-valign-middle">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Tarjeta/Método</th>
+            <th class="text-end">Monto</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let trans of transaccionesFiltradas">
+            <td>
+              <div class="f-s-12 text-muted">
+                {{ trans.fecha | date:'dd/MM/yyyy' }}
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <i class="fa fa-circle f-s-8 me-2" 
+                   [ngClass]="trans.monto > 0 ? 'text-success' : 'text-danger'"></i>
+                <div>
+                  <div class="f-w-600">{{ trans.descripcion }}</div>
+                  <div class="f-s-11 text-muted">{{ trans.tipo }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-secondary">{{ trans.categoria }}</span>
+            </td>
+            <td>
+              <span class="f-s-12 text-muted">{{ trans.tarjeta || 'Efectivo' }}</span>
+            </td>
+            <td class="text-end">
+              <div class="f-w-600" [ngClass]="trans.monto > 0 ? 'text-success' : 'text-danger'">
+                {{ trans.monto | currency:'CRC':'symbol-narrow':'1.0-0' }}
+              </div>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="editarTransaccion(trans.id)">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="eliminarTransaccion(trans.id)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="transaccionesFiltradas.length === 0">
+            <td colspan="6" class="text-center text-muted py-5">
+              <i class="fa fa-inbox fa-3x mb-3 d-block"></i>
+              No se encontraron transacciones
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </panel>
+</div>
